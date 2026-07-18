@@ -14,4 +14,4 @@ This project demonstrates a complete CI/CD pipeline using GitHub Actions for a s
 - Git & GitHub
 - GitHub Actions
 - AWS S3 / Netlify
-- HTML, CSS, JavaScript
+- HTML,CSS,JavaScript
