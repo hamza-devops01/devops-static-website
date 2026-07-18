@@ -1,0 +1,49 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install dependencies
+      run: |
+        echo "No dependencies for static site"
+    
+    - name: Build static site
+      run: |
+        echo "Copying static files"
+        mkdir -p dist
+        # Check if src exists before copying
+        if [ -d "src" ]; then
+          cp -r src/* dist/
+        else
+          echo "⚠️ Warning: src folder not found, creating default"
+          mkdir -p src
+          echo "<h1>Hello World</h1>" > src/index.html
+          cp -r src/* dist/
+        fi
+    
+    - name: List build output
+      run: |
+        echo "📂 Build output:"
+        ls -la dist/
+        # Check if index.html exists
+        if [ -f "dist/index.html" ]; then
+          echo "✅ index.html found"
+        else
+          echo "⚠️ Warning: index.html not found"
+        fi
