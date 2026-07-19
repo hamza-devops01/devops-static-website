@@ -38,22 +38,27 @@ The objective of this project is to understand the DevOps workflow by automating
 ## 📁 Project Structure
 
 ```text
-DevOps-Intern-Project/
+devops-static-website/
 │
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml
+│       ├── deploy.yml
+│       └── rollback.yml
 │
-├── images/
+├── scripts/
+│   └── deploy.sh
 │
-├── index.html
-├── style.css
-├── script.js
-├── README.md
-└── LICENSE
+├── src/
+│   ├── index.html
+│   ├── error.html
+│   ├── style.css
+│   └── script.js
+│
+├── .gitignore
+├── LICENSE
+├── project-deploy-hs-2026.pdf
+└── README.md
 ```
-
----
 
 ## ⚙️ Prerequisites
 
