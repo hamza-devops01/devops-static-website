@@ -1,0 +1,6 @@
+
+# Deployment logs
+deploy-*.log
+*.log
+*.log.*
+dist/

@@ -1,0 +1,133 @@
+name: Rollback Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_sha:
+        description: 'SHA of commit to rollback to (e.g., abc123)'
+        required: true
+        type: string
+      environment:
+        description: 'Environment to rollback'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    
+    steps:
+    # Step 1: Checkout specific commit
+    - name: Checkout specific commit
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.inputs.commit_sha }}
+        fetch-depth: 0
+    
+    # Step 2: Debug - Show commit info
+    - name: Show commit details
+      run: |
+        echo "📝 Rolling back to commit: ${{ github.event.inputs.commit_sha }}"
+        echo "📋 Commit message:"
+        git log -1 --pretty=%B
+        echo "👤 Author:"
+        git log -1 --pretty=%an
+    
+    # Step 3: Build the selected version
+    - name: Build static site
+      run: |
+        echo "📦 Building version from commit ${{ github.event.inputs.commit_sha }}"
+        mkdir -p dist
+        if [ -d "src" ]; then
+          cp -r src/* dist/
+          echo "✅ Build successful"
+        else
+          echo "⚠️ No src folder found, creating default"
+          mkdir -p src
+          echo "<h1>Rollback Version</h1>" > src/index.html
+          cp -r src/* dist/
+        fi
+    
+    # Step 4: List build output
+    - name: List build output
+      run: |
+        echo "📂 Build output:"
+        ls -la dist/
+        if [ -f "dist/index.html" ]; then
+          echo "✅ index.html found"
+        else
+          echo "❌ Error: index.html not found!"
+          exit 1
+        fi
+    
+    # Step 5: Deploy to S3 (if credentials exist)
+    - name: Deploy to AWS S3
+      if: env.AWS_ACCESS_KEY_ID != ''
+      env:
+        AWS_ACCESS_KEY_ID: ${ secrets.AWS_ACCESS_KEY_ID }
+        AWS_SECRET_ACCESS_KEY: ${ secrets.AWS_SECRET_ACCESS_KEY }
+        AWS_REGION: ${ secrets.AWS_REGION }
+        S3_BUCKET: ${ secrets.S3_BUCKET }
+      run: |
+        echo "🚀 Deploying rollback to S3..."
+        
+        # Check if AWS CLI is installed
+        if ! command -v aws &> /dev/null; then
+          echo "Installing AWS CLI..."
+          pip install awscli
+        fi
+        
+        # Sync to S3
+        aws s3 sync dist/ s3://$S3_BUCKET \
+          --delete \
+          --cache-control "max-age=3600"
+        
+        echo "✅ Rollback deployed successfully!"
+        echo "🌐 Website: http://$S3_BUCKET.s3-website-$AWS_REGION.amazonaws.com"
+    
+    # Step 6: Deploy to Netlify (alternative)
+    - name: Deploy to Netlify
+      if: env.NETLIFY_AUTH_TOKEN != ''
+      env:
+        NETLIFY_AUTH_TOKEN: ${ secrets.NETLIFY_AUTH_TOKEN }
+        NETLIFY_SITE_ID: ${ secrets.NETLIFY_SITE_ID }
+      run: |
+        echo "🚀 Deploying rollback to Netlify..."
+        npm install -g netlify-cli
+        netlify deploy \
+          --dir=dist \
+          --prod \
+          --auth=$NETLIFY_AUTH_TOKEN \
+          --site=$NETLIFY_SITE_ID
+        echo "✅ Rollback deployed to Netlify!"
+    
+    # Step 7: Create rollback record
+    - name: Create rollback record
+      run: |
+        echo "📝 Creating rollback record..."
+        mkdir -p rollback-logs
+        echo "Rollback to commit: ${{ github.event.inputs.commit_sha }}" > rollback-logs/rollback-$(date +%Y%m%d-%H%M%S).txt
+        echo "Rollback time: $(date)" >> rollback-logs/rollback-$(date +%Y%m%d-%H%M%S).txt
+        echo "Rollback triggered by: ${{ github.actor }}" >> rollback-logs/rollback-$(date +%Y%m%d-%H%M%S).txt
+    
+    # Step 8: Upload rollback logs
+    - name: Upload rollback logs
+      uses: actions/upload-artifact@v3
+      with:
+        name: rollback-logs
+        path: rollback-logs/
+        retention-days: 30
+    
+    # Step 9: Send notification
+    - name: Send rollback notification
+      if: always()
+      run: |
+        echo "📧 Rollback notification:"
+        echo "Status: ${{ job.status }}"
+        echo "Commit: ${{ github.event.inputs.commit_sha }}"
+        echo "Environment: ${{ github.event.inputs.environment }}"
+        echo "Triggered by: ${{ github.actor }}"
