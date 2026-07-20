@@ -3,46 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevOps Project - Static Website</title>
-     <link rel="stylesheet" href="style.css">
-     <script src="script.js" defer></script>
+    <title>DevOps · CI/CD Pipeline</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <header>
         <nav>
-            <div class="logo">DevOps Pipeline</div>
+            <div class="logo">
+                <i class="fas fa-code-branch"></i> DevOps · Pipeline
+            </div>
             <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="#home"><i class="fas fa-house"></i> Home</a></li>
+                <li><a href="#about"><i class="fas fa-circle-info"></i> About</a></li>
+                <li><a href="#services"><i class="fas fa-gear"></i> Services</a></li>
+                <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
+        <!-- HOME / HERO -->
         <section id="home" class="hero">
-            <h1>Welcome to DevOps CI/CD Project</h1>
-            <p>Automated deployment using GitHub Actions</p>
-            <button onclick="showAlert()">Deploy Now</button>
+            <div class="badge">
+                <i class="fas fa-circle-check"></i> CI/CD · GitHub Actions
+            </div>
+            <h1>Welcome to DevOps<br>CI/CD Project</h1>
+            <p><i class="fas fa-cloud-upload-alt"></i> Automated deployment using GitHub Actions</p>
+            <button onclick="showAlert()">
+                <i class="fas fa-rocket"></i> Deploy Now
+            </button>
+            <div class="hero-tags">
+                <span><i class="fas fa-check-circle"></i> AWS S3</span>
+                <span><i class="fas fa-check-circle"></i> Static hosting</span>
+                <span><i class="fas fa-check-circle"></i> Auto-build</span>
+            </div>
         </section>
 
+        <!-- ABOUT -->
         <section id="about">
-            <h2>About This Project</h2>
-            <p>This static website is deployed using a CI/CD pipeline built with GitHub Actions.</p>
+            <h2><i class="fas fa-code"></i> About This Project</h2>
+            <p class="about-desc">
+                <i class="fas fa-arrow-right"></i>
+                This static website is deployed using a CI/CD pipeline built with GitHub Actions.
+                Every push to the main branch triggers an automatic build & deployment to AWS S3.
+            </p>
+
             <div class="tech-stack">
-                <span>Git</span>
-                <span>GitHub Actions</span>
-                <span>AWS S3</span>
-                <span>HTML/CSS</span>
+                <span><i class="fab fa-git-alt"></i> Git</span>
+                <span><i class="fab fa-github"></i> GitHub Actions</span>
+                <span><i class="fab fa-aws"></i> AWS S3</span>
+                <span><i class="fas fa-code"></i> HTML/CSS</span>
+                <span><i class="fas fa-palette"></i> Inter & FontAwesome</span>
+            </div>
+
+            <!-- Deployment Card -->
+            <div class="deploy-card">
+                <div class="status">
+                    <span class="dot"></span>
+                    <span><i class="fas fa-circle-check"></i> Deployment active</span>
+                </div>
+                <div class="meta">
+                    <span><i class="fas fa-tag"></i> v2.1.0</span>
+                    <span><i class="fas fa-clock"></i> <span id="deploy-time">just now</span></span>
+                    <span><i class="fas fa-cloud"></i> S3 bucket</span>
+                </div>
+            </div>
+
+            <!-- SERVICES -->
+            <div id="services" class="section-block">
+                <h2><i class="fas fa-microchip"></i> Services</h2>
+                <p class="section-desc">End-to-end DevOps automation: version control, continuous integration, delivery, and monitoring.</p>
+                <div class="service-tags">
+                    <span><i class="fas fa-code-branch"></i> CI/CD pipelines</span>
+                    <span><i class="fas fa-server"></i> Infrastructure as Code</span>
+                    <span><i class="fas fa-chart-line"></i> Monitoring & logs</span>
+                </div>
+            </div>
+
+            <!-- CONTACT -->
+            <div id="contact" class="section-block">
+                <h2><i class="fas fa-paper-plane"></i> Contact</h2>
+                <p class="section-desc">
+                    <i class="fas fa-envelope"></i> devops@example.com &nbsp;|&nbsp; <i class="fab fa-github"></i> github.com/devops-pipeline
+                </p>
+                <div class="contact-badges">
+                    <span><i class="fab fa-slack"></i> Slack</span>
+                    <span><i class="fab fa-discord"></i> Discord</span>
+                </div>
             </div>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2026 DevOps Intern Project | CI/CD Pipeline</p>
+        <p><i class="fas fa-cogs"></i> &copy; 2026 DevOps Intern Project · CI/CD Pipeline</p>
+        <div class="footer-links">
+            <a href="#"><i class="fab fa-github"></i> GitHub</a>
+            <a href="#"><i class="fab fa-aws"></i> AWS</a>
+            <a href="#"><i class="fas fa-document"></i> Docs</a>
+            <a href="#"><i class="fas fa-shield-alt"></i> Status</a>
+        </div>
+        <div id="footer-timestamp"></div>
     </footer>
 
-    
+    <script src="script.js" defer></script>
 </body>
 </html>
