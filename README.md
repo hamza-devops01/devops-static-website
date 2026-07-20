@@ -55,8 +55,6 @@ devops-static-website/
 │   └── script.js
 │
 ├── .gitignore
-├── LICENSE
-├── project-deploy-hs-2026.pdf
 └── README.md
 ```
 
